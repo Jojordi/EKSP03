@@ -1,0 +1,1 @@
+{"Modelo": "TM1400(G3)", "Comentario": "", "Mecanismo": "1", "Eje externo": "N", "Cantidad ejes": "0001", "Numero herramienta": "1", "Usuario": "IMA+", "Nombre archivo": "test", "Coordenadas de usuario": "None", "Permitir edicion": "0"}
