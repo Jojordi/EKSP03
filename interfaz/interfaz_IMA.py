@@ -114,7 +114,7 @@ class MainFrame(wx.Frame):
         label_40.SetFont(wx.Font(9, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, ""))
         grid_sizer_14.Add(label_40, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
-        self.combo_box_diametros_alambre = wx.ComboBox(self.panel_2, wx.ID_ANY, choices=["0.9"], style=wx.CB_DROPDOWN)
+        self.combo_box_diametros_alambre = wx.ComboBox(self.panel_2, wx.ID_ANY, choices=["0.9", "1.0"], style=wx.CB_DROPDOWN)
         self.combo_box_diametros_alambre.SetSelection(0)
         grid_sizer_14.Add(self.combo_box_diametros_alambre, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL | wx.EXPAND, 2)
 

@@ -13,8 +13,8 @@ from interfaz.interfaz_IMA import MainFrame, VerPiezaFrame, DividirFrame, Orient
 from typing import List, Union
 
 # BASES DE DATOS DE MATERIALES NECESARIOS PARA TODO EL SISTEMA
-BASE_DATOS_SOLDADURAS = r'./path_generation/database/BaseInfoSoldadura.xls'
-BASE_DATOS_MATERIALES = r'./path_generation/database/BaseInfoMateriales.xls'
+BASE_DATOS_SOLDADURAS = r'./database/BaseInfoSoldadura.xls'
+BASE_DATOS_MATERIALES = r'./database/BaseInfoMateriales.xls'
 
 
 class VentanaVerPieza(VerPiezaFrame):
@@ -605,6 +605,8 @@ class Failures:
         parental = node.parent
         if parental == None:
             del self.layers[num_layer][num_curve]
+            # if self.layers[num_layer] == []:
+            #     del self.layers[num_layer]
             return
         else:
             upper_layer = self.layers[num_layer + 1]
@@ -616,6 +618,8 @@ class Failures:
             except:
                 None
         del self.layers[num_layer][num_curve]
+        # if self.layers[num_layer] == []:
+        #     del self.layers[num_layer]
 
     def get_curve(self, num_layer, num_curve):
         """
@@ -876,6 +880,9 @@ class VentanaEliminacionCurvas(DividirFrame):
         fallas.del_curve_parent(self.capa_actual, self.spin_ctrl_seleccion_curva.GetValue())
         fallas.back_to_input()
         self.cortes_modificados = copy.deepcopy(fallas.reversal)
+        if self.cortes_modificados[self.capa_actual] == []:
+            del self.cortes_modificados[self.capa_actual]
+            self.capa_actual -= 1
         self.graficar_capa(self.capa_actual)
 
     def reiniciar_capas(self, event: wx.CommandEvent):

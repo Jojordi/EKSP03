@@ -578,7 +578,9 @@ def select_option(df_results):
         curve_n=curve_n.sort_values(by=['PP'],ascending=[False])
         areacover = (curve_n['% Área C'].values[0])
         centro_n = (curve_n['Centro'].values[0])
-        nameoption_ = (curve_n['Estrategia'].values[0])
+        nameoption_ = (curve_n['Estrategia'].values[0]) #VERSION ACTUAL EN RAMA MASTER
+        # nameoption_ = 'Raster Discrete' # NOTA: ESTA MODIFICACION FUERZA LA ELECCION DE ESTRATEGIA, \
+            # 'RASTER DISCRETE' 'RASTER CONTINUOS' 'CONTOUR DISCRETE' 'CONTOUR CONTINUOS' O 'ROTATORIO ZIGZAG'
         if areacover < min_area:
             print("Área: {}% ".format(areacover), end= " ")
             print("Se realizará división")

@@ -119,7 +119,7 @@ def valores_filtros(area):
         d_filter_cv = d_filter
         angle_value_cx = 12
         angle_value_cv = 0.5
-        d_min = 3.2  # distancia minima, depende del detalle en la falla
+        d_min = 1.5 # 3.2  # distancia minima, depende del detalle en la falla
         cut_d = 0.5  # 2.5 #Buscar punto a tal distancia
         d_separation = 6
     else:
@@ -129,7 +129,7 @@ def valores_filtros(area):
         d_filter_cv = d_filter
         angle_value_cx = 12  # 15 #45#60 #valor del ángulo de puntos  concavos que no se eliminan
         angle_value_cv = 8
-        d_min = 4  # 3.5 #1.5 #distancia minima, depende del detalle en la falla
+        d_min = 1.4  # 3.5 #1.5 #distancia minima, depende del detalle en la falla
         cut_d = 2  # 2.5 #Buscar punto a tal distancia
         d_separation = 6
     return angle_x, angle_v, d_filter, d_filter_cv, angle_value_cx, angle_value_cv, d_min, cut_d, d_separation
@@ -346,7 +346,10 @@ def puntos_lentos(concav_filter, convex_filter, line_original):
     df_final = df_total_1.query('angle >'+str(angle_curves))  # filtro por ángulo 
     lista_curvos = df_final['geometry'].to_list()# lista de puntos
     
-    del(df_total_original['distance'])
+    try:
+        del(df_total_original['distance'])
+    except:
+        return lista_curvos, df_total_original
     return lista_curvos, df_total_original
 
 def añadir_puntos(lista_curvos, line_original, cut_d, d_separation):

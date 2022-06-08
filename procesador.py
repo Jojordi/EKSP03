@@ -409,7 +409,7 @@ class Procesador:
 
     def orientar_malla(self, mesh: vedo.Mesh, 
                         lista_marcadores: List[vedo.shapes.Cross3D], 
-                        rotaciones: List, tipo_pieza: int=0, tipo_orientacion: int=0) -> Tuple[List[Rotation], vedo.Mesh, List[vedo.shapes.Cross3D]]:
+                        rotaciones: List, tipo_pieza: int=0, tipo_orientacion: int=1) -> Tuple[List[Rotation], vedo.Mesh, List[vedo.shapes.Cross3D]]:
         """
             Orienta la malla ingresada usando los marcadores colocados sobre su superficie para calcular las rotaciones necesarias.
             La malla es rotada respecto a su centro.
@@ -449,7 +449,7 @@ class Procesador:
         # CASO CILINDROS
         if tipo_pieza == 1:
             if tipo_orientacion == 1:
-                mesh = self.orientar_cilindro_automaticamente(mesh)
+                mesh, lista_marcadores = self.orientar_cilindro_automaticamente(mesh, lista_marcadores)
             elif tipo_orientacion == 0:
                 rotaciones, mesh, lista_marcadores = self.orientar_cilindro_manualmente(mesh, lista_marcadores, rotaciones)
 
@@ -526,7 +526,7 @@ class Procesador:
         else:
             return rotaciones, mesh, lista_marcadores
         
-    def orientar_cilindro_automaticamente(self, mesh):
+    def orientar_cilindro_automaticamente(self, mesh: vedo.Mesh, lista_marcadores: List[vedo.shapes.Cross3D]):
         """
             Orienta la malla de manera automática a partir de ajustar malla a un modelo obtenido mediante propiedades geométricas y RANSAC.
             Proceso de manera iterativa toma puntos aleatoriamente para ajustar un modelo que defina los parámetros de la malla usada.
@@ -587,8 +587,7 @@ class Procesador:
             for iteration in range(NumIter):  
                 """Se eligen 3 puntos al azar, se extraen sus posiciones XYZ y sus normales"""
                 points = np.asarray(random.sample(List_PointsWithNormals,3))
-                # points = np.asarray(random.sample(list(self.in_sphere(len(vertices)*0.01,Points_With_Normals[random.randint(0,len(vertices)-1)],Points_With_Normals)),3))
-                
+                   
                 Point1 = np.array([points[0][0],points[0][1],points[0][2]])
                 Point2 = np.array([points[1][0],points[1][1],points[1][2]])
                 Point3 = np.array([points[2][0],points[2][1],points[2][2]])
@@ -660,7 +659,6 @@ class Procesador:
                         print("Current Radius:", Best_Sample[0])
                         print("Current Position: X: {}, Y:{}, Z:{}".format(Best_Sample[1],Best_Sample[2],Best_Sample[3]))
                         print("Current Orientation: X: {}, Y:{}, Z:{}".format(Best_Sample[4],Best_Sample[5],Best_Sample[6]))
-                        # print("Current Length:", Best_Sample[7])
                         print("RANSAC Score: {}, Score: {} (Found in Iteration {})".format(RANSAC_Score,Score,Best_Sample_Position))
                         print("----------")
                     else:
@@ -675,20 +673,59 @@ class Procesador:
             Cylinder_Radius = Best_Sample[0]
             
             """Matrices de rotacion"""
-            Vector_Orientacion = [Best_Sample[4],Best_Sample[5],Best_Sample[6]]
+            Vector_Orientacion = [Best_Sample[4],Best_Sample[5],Best_Sample[6]] # Orientación calculada del cilindro
             normalizado_orientacion = max(abs(np.asarray(Vector_Orientacion)))
             Vector_Orientacion = Vector_Orientacion/normalizado_orientacion
-            Rotate = Rotation.align_vectors([Vector_Orientacion], [[0,0,1]]) # Para rotar primitiva a orientacion de pcd
+            Rotate = Rotation.align_vectors([Vector_Orientacion], [[0,0,1]]) # Cálculo de la matriz de rotación para luego aplicarla
             mesh.applyTransform(Rotate[0].as_matrix(), reset=True)
-            New_Orientation = Rotate[0].apply(Vector_Orientacion)
+            New_Orientation = Rotate[0].apply(Vector_Orientacion) # Se aplica matriz de rotación al vector de orientación calculada para chequeo
             normalizado_nuevo = max(abs(np.asarray(New_Orientation)))
             New_Orientation = New_Orientation/normalizado_nuevo
     
             if (New_Orientation[0] <= 0.001) and (abs(New_Orientation[1]) <= 0.001) and (abs(New_Orientation[2]) == 1):
                 break
 
-        matrixZtoX = np.asarray([[0., 0., 1.],[0., 1., 0.],[-1., 0., 0.]])
+        matrixZtoX = np.asarray([[0., 0., 1.],[0., 1., 0.],[-1., 0., 0.]]) # Matriz de rotación usada para que el eje Z quede donde iría el eje X
         mesh.applyTransform(matrixZtoX, reset=True)
+        
+        lista_marcadores = self.orientar_marcadores(lista_marcadores, Rotate[0].as_matrix()) # Marcador es rotado para quedar como cilindro calculado
+        lista_marcadores = self.orientar_marcadores(lista_marcadores, matrixZtoX) # Marcador es rotado para que su Z sea X
+        
+        punto_origen = np.asarray(lista_marcadores[0].pos())
+        
+        centro = Best_Sample[1],Best_Sample[2],Best_Sample[3]
+        punto_centro = [punto_origen[0], centro[0], centro[1]]
+        vector_z = punto_origen - punto_centro
+        vector_z = vector_z/np.linalg.norm(vector_z)
+
+        ejes_alineacion = [[0, 0, 1]]
+        vectores_elegidos = [vector_z]
+        rotacion_transform = self.calcular_rotacion(ejes_alineacion, vectores_elegidos)
+        mesh.applyTransform(rotacion_transform.as_matrix(), reset=True)
+        lista_marcadores = self.orientar_marcadores(lista_marcadores, rotacion_transform.as_matrix())
+        
+        # # matrixZtoX = Rotation.from_matrix(matrixZtoX)
+        
+        # # orientation = matrixZtoX.apply(New_Orientation) # Orientación actual del cilindro
+        # orientation = np.asarray([1.,0.,0.])
+        
+        # ptoAux = self.project_point_to_line(lista_marcadores[0].pos(), orientation) # Proyección del marcador sobre el eje del cilindro
+        # direccion_marcador = self.direction_vector(ptoAux[0], lista_marcadores[0].pos()) # Vector que va desde el punto proyectado al marcador
+
+        # axisZ = np.asarray([0,0,1])
+        # norm_vect = np.linalg.norm(direccion_marcador)
+        # norm_Z = np.linalg.norm(axisZ)
+        # cos_theta = (direccion_marcador@axisZ)/(norm_vect*norm_Z)
+        # sin_theta = (np.linalg.norm(np.cross(direccion_marcador,axisZ)))/(norm_vect*norm_Z)
+        
+        # marcador_en_zpositivo = np.asarray([[1., 0., 0.],[0., cos_theta, -sin_theta],[0., sin_theta,  cos_theta]])
+        # rotateZup = Rotation.from_matrix(marcador_en_zpositivo)
+                                           
+        # rotateZup = Rotation.align_vectors([direccion_marcador], [[0,0,1]]) # Matriz de rotación que deja el marcador orientado en [0,0,1]
+        
+        # lista_marcadores = self.orientar_marcadores(lista_marcadores, -marcador_en_zpositivo)
+        # mesh.applyTransform(marcador_en_zpositivo, reset=True)
+        
         stop_time = timeit.default_timer()
         
         # new_vertices = Rotate[0].apply(vertices)
@@ -702,7 +739,7 @@ class Procesador:
         print("New Orientation: X: {:.5f}, Y:{:.5f}, Z:{:.5f}".format(New_Orientation[0],New_Orientation[1],New_Orientation[2]))
         print("Radio: {:.5f}".format(Cylinder_Radius))
         print('Time: {:.5} seconds'.format(stop_time - start_time))  
-        return mesh
+        return mesh, lista_marcadores
 
     def orientar_cilindro_manualmente(self, mesh: vedo.Mesh, lista_marcadores: List[vedo.shapes.Cross3D], rotaciones: List) -> Tuple[List[Rotation], vedo.Mesh, List[vedo.shapes.Cross3D]]:
         """
