@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 import wx
 import vedo
+import vtk
+import vtkmodules
+import vtkmodules.all
+from vtkmodules.util import numpy_support
 import copy
 import trimesh
 import utilidades

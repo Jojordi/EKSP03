@@ -3,12 +3,16 @@ import vedo
 import random
 import timeit
 import trimesh
+import networkx
 from vedo.mesh import Mesh
 import utilidades
+import shapely
 import shapely.ops
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
+from sklearn.utils import _typedefs, _heap, _sorting, _vector_sentinel
+from sklearn.neighbors import _partition_nodes
 from skspatial.objects import Line
 from skspatial.objects import Plane
 from scipy.spatial.transform import Rotation

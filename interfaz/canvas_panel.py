@@ -6,7 +6,8 @@ import numpy as np
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 # Por alguna razon se tiene que importar así o no reconoce el interactor
-from vtk.wx.wxVTKRenderWindowInteractor import wxVTKRenderWindowInteractor
+# from vtk.wx.wxVTKRenderWindowInteractor import wxVTKRenderWindowInteractor
+from vtkmodules.wx.wxVTKRenderWindowInteractor import wxVTKRenderWindowInteractor
 from typing import Callable, List, Tuple, Union
 
 
@@ -318,7 +319,7 @@ class VedoPanel(wx.Panel):
             self.plotter.remove([self.mesh], at=0)
         
         if isinstance(file, trimesh.base.Trimesh):
-            self.mesh = vedo.utils.trimesh2vedo(file, alphaPerCell=False)
+            self.mesh = vedo.utils.trimesh2vedo(file)
         if isinstance(file, str):
             self.mesh = vedo.Mesh(file)
 
