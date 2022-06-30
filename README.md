@@ -10,7 +10,7 @@ Repositorio destinado a la generación de programas instaladores de software EKS
  
  Se incluye un archivo de requirements en la carpeta principal del projecto además de dos archivos .whl necesarios para la instalación de las bibliotecas GDAL y Fiona, para poder utilizar el archivo de requirements se debe reemplazar el apartado PATHTOPROJECT con el path de la carpeta contenedora del projecto este apartado se ve de la siguiente manera:
  
-![image](https://user-images.githubusercontent.com/30658657/176688906-bd019585-d35a-47e3-987a-f76559deee79.png)
+![image](https://user-images.githubusercontent.com/30658657/176694666-46ac64b4-475d-4c7b-99de-a4ff6b4299e0.png)
 
 Luego de aquella edición utilizar el comando:
 
