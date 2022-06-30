@@ -1,45 +1,43 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+Repositorio destinado a la generación de programas instaladores de software EKSP03. Por el minuto solo es posible generar instaladores para computadores con sistema operativo Windows de 64 bits.
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+## Como utilizar
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+**Clonar repositorio**
+ 
+ Al bajar el repositorio anotar el path de la carpeta de destino dado que será utilizado en el siguiente paso.
+ 
+ **Instalar bibliotecas**
+ 
+ Se incluye un archivo de requirements en la carpeta principal del projecto además de dos archivos .whl necesarios para la instalación de las bibliotecas GDAL y Fiona, para poder utilizar el archivo de requirements se debe reemplazar el apartado PATHTOPROJECT con el path de la carpeta contenedora del projecto este apartado se ve de la siguiente manera:
+ 
+![image](https://user-images.githubusercontent.com/30658657/176688906-bd019585-d35a-47e3-987a-f76559deee79.png)
 
----
+Luego de aquella edición utilizar el comando:
 
-## Edit a file
+```
+pip install -r requirements.txt
+```
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+El cual instalara todas las dependencias del projecto.
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+**Editar Archivo Main de Biblioteca Geopandas**
 
----
+La biblioteca geopandas realiza un import de una base de datos la cual no es utilizada por el projecto y genera conflictos con la biblioteca que genera el archivo ejecutable del projecto por lo cual se debe comentar la siguiente linea de dicha biblioteca:
 
-## Create a file
+**Generar archivo ejecutable**
 
-Next, you’ll add a new file to this repository.
+Para generar un archivo ejecutable del projecto, abrir una terminal en la carpeta principal de el projecto y ejecutar el comando:
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+```
+pyinstaller main.spec
+```
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+El cual despues de un tiempo generara un archivo main.exe el cual no requiere que el sistema operativo posea una version de python o alguna de sus bibliotecas para funcionar.
 
----
+**Generar archivo instalador**
 
-## Clone a repository
+Dado que el projecto posee bastantes dependencias, el solo archivo main.exe no es suficiente para poder ejecutarlo completo con lo cual se necesitara un programa que recopile todas estas dependencias y las empaquete para el instalador, para ello se utilizó el programa Nullsoftware Scriptable Install System o NSIS el cual puede ser obtenido desde [sourceforge.net](https://sourceforge.net/)
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+Una vez instalado NSIS se debe generar un archivo zip de la carpeta contenedora del projecto
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
-
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+Finalmente se debera abrir NSIS y utilizar la opción
