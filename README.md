@@ -35,14 +35,23 @@ Para generar un archivo ejecutable del projecto, abrir una terminal en la carpet
 pyinstaller main.spec
 ```
 
-El cual despues de un tiempo generara un archivo main.exe el cual no requiere que el sistema operativo posea una version de python o alguna de sus bibliotecas para funcionar.
+El cual despues de un tiempo generara un archivo main.exe el cual no requiere que el sistema operativo posea una version de python o alguna de sus bibliotecas para funcionar. 
+
+Este archivo se encuentra en la carpeta dist generada por pyinstaller
 
 ![image](https://user-images.githubusercontent.com/30658657/176699003-94e66531-943d-4c49-9dd1-dcdf4d5e9ad6.png)
-![image](https://user-images.githubusercontent.com/30658657/176699113-02d595f2-eb39-4cb2-b326-396bebb92a85.png)
-![image](https://user-images.githubusercontent.com/30658657/176699282-aae60df3-a151-4abb-9818-81b277e88e98.png)
-![image](https://user-images.githubusercontent.com/30658657/176699492-2989401e-ea0f-4173-abb0-980fed635da7.png)
-![image](https://user-images.githubusercontent.com/30658657/176699717-47f7426a-a342-442b-b96f-9016fc9bc242.png)
 
+Este es el archivo ejecutable contenido por dist
+
+![image](https://user-images.githubusercontent.com/30658657/176699113-02d595f2-eb39-4cb2-b326-396bebb92a85.png)
+
+Este archivo debe ser enviado a la carpeta principal para que pueda utilizar todas las dependencias externas.Las carpetas señaladas ya no sirven y pueden ser eliminadas.
+
+![image](https://user-images.githubusercontent.com/30658657/176699282-aae60df3-a151-4abb-9818-81b277e88e98.png)
+
+De hecho se recomienda borrar todas estas carpetas par reducir el espacio que ocupará el instalador ya que no serán utilizadas y ocupan bastante espacio.
+
+![image](https://user-images.githubusercontent.com/30658657/176699492-2989401e-ea0f-4173-abb0-980fed635da7.png)
 
 **Generar archivo instalador**
 
@@ -50,7 +59,10 @@ Dado que el projecto posee bastantes dependencias, el solo archivo main.exe no e
 
 Una vez instalado NSIS se debe generar un archivo zip de la carpeta contenedora del projecto
 
-Finalmente se debera abrir NSIS y utilizar la opción
+![image](https://user-images.githubusercontent.com/30658657/176699717-47f7426a-a342-442b-b96f-9016fc9bc242.png)
+
+Finalmente se debera abrir NSIS y utilizar la opción installer based on **.ZIP file**. Seleccionar el archivo zip generado en el paso anterior.
 
 ![image](https://user-images.githubusercontent.com/30658657/176700303-b0cff725-33bd-498e-a373-0aa7f8f6f45b.png)
 
+Los parametros de default son correctos con lo cual simplemente seguir las instrucciones y darle siguiente al programa. Una vez finalizado se tendra un archivo ejecutable capaz de instalar el projecto.
