@@ -39,7 +39,7 @@ El cual despues de un tiempo generara un archivo main.exe el cual no requiere qu
 
 Este archivo se encuentra en la carpeta dist generada por pyinstaller
 
-![image](https://user-images.githubusercontent.com/30658657/176699003-94e66531-943d-4c49-9dd1-dcdf4d5e9ad6.png)
+![instruccion1](https://user-images.githubusercontent.com/30658657/177056408-22a9bf34-8489-4edf-a1b8-9528078415bf.JPG)
 
 Este es el archivo ejecutable contenido por dist
 
@@ -47,15 +47,20 @@ Este es el archivo ejecutable contenido por dist
 
 Este archivo debe ser enviado a la carpeta principal para que pueda utilizar todas las dependencias externas.Las carpetas señaladas ya no sirven y pueden ser eliminadas.
 
-![image](https://user-images.githubusercontent.com/30658657/176699282-aae60df3-a151-4abb-9818-81b277e88e98.png)
+![instruccion2](https://user-images.githubusercontent.com/30658657/177056435-885e56c0-48fb-4dc5-87ba-805fea7c2291.JPG)
 
-De hecho se recomienda borrar todas estas carpetas par reducir el espacio que ocupará el instalador ya que no serán utilizadas y ocupan bastante espacio.
+De hecho se recomienda borrar carpetas para reducir el espacio que ocupará el instalador ya que no serán utilizadas y ocupan bastante espacio. Las unicas carpetas requeridas son las siguientes:
 
-![image](https://user-images.githubusercontent.com/30658657/176699492-2989401e-ea0f-4173-abb0-980fed635da7.png)
+![instruccion5](https://user-images.githubusercontent.com/30658657/177056519-05254ccf-148e-4fa7-8654-c8feb7fc3f00.JPG)
+
 
 **Generar archivo instalador**
 
 Dado que el projecto posee bastantes dependencias, el solo archivo main.exe no es suficiente para poder ejecutarlo completo con lo cual se necesitara un programa que recopile todas estas dependencias y las empaquete para el instalador, para ello se utilizó el programa **Nullsoftware Scriptable Install System** o NSIS el cual puede ser obtenido desde [sourceforge.net](https://sourceforge.net/)
+
+![instruccion3](https://user-images.githubusercontent.com/30658657/177056475-167ef4ea-6f12-4509-b25c-151b502d8bd8.JPG)
+
+![instruccion4](https://user-images.githubusercontent.com/30658657/177056492-f194e520-13dc-4a96-af43-59e653df43f6.JPG)
 
 Una vez instalado NSIS se debe generar un archivo zip de la carpeta contenedora del projecto
 
